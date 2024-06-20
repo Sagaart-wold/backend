@@ -46,8 +46,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_filters',
+    'djoser',
+    'corsheaders',
     'users',
     'artobjects',
     'api'
@@ -98,6 +102,13 @@ DATABASES = {
         'PORT': os.getenv('POSTGRES_PORT', 5432)
     }
 }
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+}
+
 
 
 # Password validation

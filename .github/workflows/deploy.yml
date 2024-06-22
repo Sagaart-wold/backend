@@ -1,9 +1,9 @@
 name: sagaart-deploy
 
 on:
-  pull_request:
+  push:
     branches:
-      - main
+      - add/git-actions
 
 jobs:
   build:
@@ -20,8 +20,10 @@ jobs:
           git clone git@github.com:Sagaart-wold/frontend.git -b develop frontend
 
       - name: Run Docker Compose
+        working-directory: docker-wrapper
         run: docker-compose up -d
 
       - name: Tear down Docker Compose
         if: always()
+        working-directory: docker-wrapper
         run: docker-compose --volumes --rmi all

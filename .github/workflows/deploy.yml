@@ -1,0 +1,27 @@
+name: sagaart-deploy
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repositories
+        run: |
+          # клонируем docker-wrapper
+          git clone git@github.com:Sagaart-wold/docker-wrapper.git
+          cd docker-wrapper
+          # клонируем фронт и бек
+          git clone git@github.com:Sagaart-wold/backend.git -b develop backend 
+          git clone git@github.com:Sagaart-wold/frontend.git -b develop frontend
+
+      - name: Run Docker Compose
+        run: docker-compose up -d
+
+      - name: Tear down Docker Compose
+        if: always()
+        run: docker-compose --volumes --rmi all

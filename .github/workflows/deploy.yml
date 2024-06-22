@@ -17,13 +17,13 @@ jobs:
           cd docker-wrapper
           # клонируем фронт и бек
           git clone git@github.com:Sagaart-wold/backend.git -b develop backend 
-          git clone git@github.com:Sagaart-wold/frontend.git -b develop frontend
+          git clone https://github.com/Sagaart-wold/frontend.git -b develop frontend 
 
       - name: Run Docker Compose
         working-directory: docker-wrapper
-        run: docker-compose up -d
+        run: docker compose up -d
 
       - name: Tear down Docker Compose
         if: always()
         working-directory: docker-wrapper
-        run: docker-compose down --volumes --rmi all
+        run: docker compose down --volumes --rmi all

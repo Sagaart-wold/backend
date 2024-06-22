@@ -26,4 +26,4 @@ jobs:
       - name: Tear down Docker Compose
         if: always()
         working-directory: docker-wrapper
-        run: docker-compose --volumes --rmi all
+        run: docker-compose down --volumes --rmi all

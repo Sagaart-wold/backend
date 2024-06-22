@@ -8,6 +8,7 @@ venv/
 .idea
 .DS_Store
 .vscode/
+__pycache__/
 
 # папки со статикой и медиа
 static/

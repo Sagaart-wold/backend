@@ -15,6 +15,7 @@ jobs:
           # клонируем docker-wrapper
           git clone https://github.com/Sagaart-wold/docker-wrapper.git
           cd docker-wrapper
+          mv .env.example .env
           # клонируем фронт и бек
           git clone https://github.com/Sagaart-wold/backend.git -b develop backend
           git clone https://github.com/Sagaart-wold/frontend.git -b develop frontend 

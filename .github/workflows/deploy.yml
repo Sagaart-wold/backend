@@ -34,8 +34,8 @@ jobs:
       # Дождёмся успешного билда
       - build
     steps:
-      - name: Executing remote ssh commands to deploy
-        id: deploy
+      - name: Update repo
+        id: update-repo
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
@@ -51,9 +51,18 @@ jobs:
             cd ../frontend
             git pull
             cd ..
-            # Перезапускаем докер
-            sudo docker compose down
-            sudo docker compose up -d
+
+      - name: Restart Docker
+        id: restart-docker-compose
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            sudo docker compose -f docker-compose.prod.yml down
+            sudo docker compose -f docker-compose.prod.yml up -d
 
       - name: send messsage
         if: always()
@@ -61,4 +70,7 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: Деплой ${{ steps.deploy.conclusion }}!
+          message: | 
+            Обновление репозиториев - ${{ steps.update-repo.conclusion }}!
+            Рестарт Докера - ${{ steps.restart-docker-compose.conclusion }}!
+            

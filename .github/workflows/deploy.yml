@@ -35,6 +35,7 @@ jobs:
       - build
     steps:
       - name: Executing remote ssh commands to deploy
+        id: deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
@@ -60,4 +61,4 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: Деплой ${{ steps.step1.conclusion }}!
+          message: Деплой ${{ steps.deploy.conclusion }}!

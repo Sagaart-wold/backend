@@ -3,7 +3,7 @@ name: sagaart-deploy
 on:
   push:
     branches:
-      - add/git-actions
+      - develop
 
 jobs:
   build:

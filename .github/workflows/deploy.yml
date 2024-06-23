@@ -1,0 +1,76 @@
+name: sagaart-deploy
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repositories
+        run: |
+          # Клонируем docker-wrapper
+          git clone https://github.com/Sagaart-wold/docker-wrapper.git
+          cd docker-wrapper
+          mv .env.example .env
+          # клонируем фронт и бек
+          git clone https://github.com/Sagaart-wold/backend.git -b develop backend
+          git clone https://github.com/Sagaart-wold/frontend.git -b develop frontend 
+
+      - name: Run Docker Compose
+        working-directory: docker-wrapper
+        run: docker compose up -d
+
+      - name: Tear down Docker Compose
+        if: always()
+        working-directory: docker-wrapper
+        run: docker compose down --volumes --rmi all
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      # Дождёмся успешного билда
+      - build
+    steps:
+      - name: Update repo
+        id: update-repo
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            # Обновляем репозитории
+            cd docker-wrapper
+            git pull
+            cd backend
+            git pull
+            cd ../frontend
+            git pull
+
+      - name: Restart Docker
+        id: restart-docker-compose
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd docker-wrapper
+            sudo docker compose -f docker-compose.prod.yml down
+            sudo docker compose -f docker-compose.prod.yml up --build -d
+
+      - name: send messsage
+        if: always()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: | 
+            Обновление репозиториев - ${{ steps.update-repo.conclusion }}!
+            Рестарт Докера - ${{ steps.restart-docker-compose.conclusion }}!
+            

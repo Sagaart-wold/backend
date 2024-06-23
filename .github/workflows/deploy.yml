@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - develop
+      - add/git-actions
+
 
 jobs:
   build:
@@ -63,6 +65,8 @@ jobs:
             cd docker-wrapper
             sudo docker compose -f docker-compose.prod.yml down
             sudo docker compose -f docker-compose.prod.yml up --build -d
+            sudo docker compose -f docker-compose.prod.yml exec django python manage.py collectstatic -c --noinput
+            sudo docker compose -f docker-compose.prod.yml exec django bash -c 'cp -rf /usr/src/app/collected_static/* /usr/src/app/static/'
 
       - name: send messsage
         if: always()

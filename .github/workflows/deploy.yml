@@ -50,7 +50,6 @@ jobs:
             git pull
             cd ../frontend
             git pull
-            cd ..
 
       - name: Restart Docker
         id: restart-docker-compose
@@ -61,8 +60,9 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
+            cd docker-wrapper
             sudo docker compose -f docker-compose.prod.yml down
-            sudo docker compose -f docker-compose.prod.yml up -d
+            sudo docker compose -f docker-compose.prod.yml up --build -d
 
       - name: send messsage
         if: always()

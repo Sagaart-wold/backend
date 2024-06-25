@@ -56,14 +56,14 @@ class Artist(models.Model):
         default=None,
     )
     city_of_birth = models.ForeignKey(
-        'City',
+        'core.City',
         verbose_name="Город рождения",
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
     )
     city_of_living = models.ForeignKey(
-        'City',
+        'core.City',
         verbose_name="Город проживания",
         blank=True,
         null=True,
@@ -74,7 +74,7 @@ class Artist(models.Model):
         default=False
     )
     photo = models.ForeignKey(
-        'Image',
+        'core.Image',
         verbose_name='Фото художника',
         blank=True,
         null=True,

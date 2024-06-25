@@ -11,18 +11,16 @@ User = get_user_model()
 
 class Artist(models.Model):
     class Sex(models.IntegerChoices):
-        MALE = 1, 'male'
-        FEMALE = 2, 'female'
+        MALE = 1, 'М'
+        FEMALE = 2, 'Ж'
 
     first_name = models.CharField(
         verbose_name="Имя",
         max_length=MAX_LENGTH_CHARFIELD,
-        blank=False,
     )
     last_name = models.CharField(
         verbose_name="Имя",
         max_length=MAX_LENGTH_CHARFIELD,
-        blank=False,
     )
     description = models.TextField(
         verbose_name="О художнике",
@@ -30,7 +28,7 @@ class Artist(models.Model):
         max_length=MAX_LENGTH_TEXTFIELD,
     )
     sex = models.PositiveSmallIntegerField(
-        verbose_name="Видимость",
+        verbose_name="Пол",
         choices=Sex.choices,
         blank=True,
     )
@@ -94,12 +92,18 @@ class Artist(models.Model):
         default_related_name = "artists"
 
 
-class ArtistSocialMedia(models.Model):
+class ABSModelWithArtistField(models.Model):
     artist = models.ForeignKey(
         'Artist',
         verbose_name='Художник',
         on_delete=models.CASCADE,
     )
+
+    class Meta:
+        abstract = True
+
+
+class ArtistSocialMedia(ABSModelWithArtistField):
     link = models.URLField(
         verbose_name='Ссылка',
         unique=True,
@@ -115,4 +119,111 @@ class ArtistSocialMedia(models.Model):
     class Meta:
         verbose_name = "Художник"
         verbose_name_plural = "Художники"
-        default_related_name = "artist_social_medias"
+        default_related_name = "social_medias"
+
+
+class TeachingActivities(ABSModelWithArtistField):
+    educational_institutions = models.ForeignKey(
+        'EducationalInstitution',
+        verbose_name='Учреждение',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    started_at = models.DateField(
+        verbose_name="Начало",
+        validators=[
+            MaxValueValidator(
+                limit_value=date.today,
+            )
+        ],
+    )
+    ended_at = models.DateField(
+        verbose_name="Конец",
+        validators=[
+            MaxValueValidator(
+                limit_value=date.today,
+            )
+        ],
+    )
+
+    class Meta:
+        verbose_name = "Преподавание"
+        verbose_name_plural = "Преподавание"
+        default_related_name = "teaching"
+
+
+class Education(TeachingActivities):
+    degree = models.CharField(
+        verbose_name="Степень",
+        max_length=MAX_LENGTH_CHARFIELD,
+    )
+
+    class Meta:
+        verbose_name = "Образование"
+        verbose_name_plural = "Образование"
+        default_related_name = "education"
+
+
+class EducationalInstitution(models.Model):
+    class TypeEducationalInstitution(models.IntegerChoices):
+        UNIVERSITY = 1, 'Университет'
+        COLLEGE = 2, 'Колледж'
+        ART_SCHOOL = 3, 'Школа искусств'
+        COURSES = 4, 'Курсы'
+
+    name = models.CharField(
+        verbose_name="Название",
+        max_length=MAX_LENGTH_CHARFIELD,
+    )
+    type_ei = models.PositiveSmallIntegerField(
+        verbose_name="Тип учебного заведения",
+        choices=TypeEducationalInstitution.choices,
+        blank=True,
+    )
+    city_of_birth = models.ForeignKey(
+        'core.City',
+        verbose_name="Город",
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+
+    class Meta:
+        verbose_name = "Учебное заведение"
+        verbose_name_plural = "Учебные Заведения"
+        default_related_name = "educational_institution"
+
+
+class ArtistAward(ABSModelWithArtistField):
+    award = models.ForeignKey(
+        'Award',
+        verbose_name='Награда',
+        on_delete=models.CASCADE,
+    )
+    year = models.PositiveSmallIntegerField(
+        verbose_name='Год',
+        validators=[
+            MaxValueValidator(
+                limit_value=date.today().year,
+            )
+        ],
+    )
+    city = models.ForeignKey(
+        'core.City',
+        verbose_name="Город",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+
+    class Meta:
+        verbose_name = "Награда"
+        verbose_name_plural = "Награды"
+        default_related_name = "artist_awards"
+
+
+class Award(models.Model):
+    name = models.CharField(
+        verbose_name="Название",
+        max_length=MAX_LENGTH_CHARFIELD,
+    )

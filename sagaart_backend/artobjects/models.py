@@ -9,6 +9,115 @@ from .constants import MAX_LENGTH_CHARFIELD, MAX_LENGTH_TEXTFIELD
 User = get_user_model()
 
 
+class Category(models.Model):
+    """Model Category."""
+    name = models.CharField(
+        max_length=MAX_LENGTH_CHARFIELD,
+        verbose_name="Название категории",
+        help_text="Введите название категории",
+        unique=True,
+    )
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class Color(models.Model):
+    """Model Color."""
+    name = models.CharField(
+        max_length=MAX_LENGTH_CHARFIELD,
+        verbose_name="Название цветовой палитры",
+        help_text="Введите название цветовой палитры",
+        unique=True,
+    )
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Цветовая палитра"
+        verbose_name_plural = "цветовые палитры"
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class Genre(models.Model):
+    """Model Genre."""
+    name = models.CharField(
+        max_length=MAX_LENGTH_CHARFIELD,
+        verbose_name="Название жанра",
+        help_text="Введите название жанра",
+        unique=True,
+    )
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Жанра"
+        verbose_name_plural = "Жанры"
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class MaterialArtObject(models.Model):
+    """Model MaterialArtObject."""
+    name = models.CharField(
+        max_length=MAX_LENGTH_CHARFIELD,
+        verbose_name="Название материала арт объекта",
+        help_text="Введите название материала арт объекта",
+        unique=True,
+    )
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Материал арт объекта"
+        verbose_name_plural = "материалы арт объекта"
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class BaseArtObject(models.Model):
+    """Model BaseArtObject."""
+    name = models.CharField(
+        max_length=MAX_LENGTH_CHARFIELD,
+        verbose_name="Название основы арт объекта",
+        help_text="Введите название основы арт объекта",
+        unique=True,
+    )
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Основа арт объекта"
+        verbose_name_plural = "Основы арт объекта"
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+
+class Style(models.Model):
+    """Model Style."""
+    name = models.CharField(
+        max_length=MAX_LENGTH_CHARFIELD,
+        verbose_name="Название стиля",
+        help_text="Введите название стиля",
+        unique=True,
+    )
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Стиль"
+        verbose_name_plural = "Стили"
+
+    def __str__(self):
+        return f'{self.name}'
+
+
 class Artist(models.Model):
     class Sex(models.IntegerChoices):
         MALE = 1, 'М'

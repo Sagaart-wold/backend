@@ -86,3 +86,33 @@ class Artist(models.Model):
         verbose_name="Добавили в избранное",
         related_name="favorite_artists",
     )
+
+    class Meta:
+        verbose_name = "Художник"
+        verbose_name_plural = "Художники"
+        ordering = ("last_name", "first_name")
+        default_related_name = "artists"
+
+
+class ArtistSocialMedia(models.Model):
+    artist = models.ForeignKey(
+        'Artist',
+        verbose_name='Художник',
+        on_delete=models.CASCADE,
+    )
+    link = models.URLField(
+        verbose_name='Ссылка',
+        unique=True,
+    )
+    social_media = models.ForeignKey(
+        'core.SocialMedia',
+        verbose_name='Социальная сеть',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+
+    class Meta:
+        verbose_name = "Художник"
+        verbose_name_plural = "Художники"
+        default_related_name = "artist_social_medias"

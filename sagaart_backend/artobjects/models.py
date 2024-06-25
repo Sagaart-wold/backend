@@ -128,7 +128,7 @@ class Artist(models.Model):
         max_length=MAX_LENGTH_CHARFIELD,
     )
     last_name = models.CharField(
-        verbose_name="Имя",
+        verbose_name="Фамилия",
         max_length=MAX_LENGTH_CHARFIELD,
     )
     description = models.TextField(
@@ -226,8 +226,8 @@ class ArtistSocialMedia(ABSModelWithArtistField):
     )
 
     class Meta:
-        verbose_name = "Художник"
-        verbose_name_plural = "Художники"
+        verbose_name = "Социальная сеть художника"
+        verbose_name_plural = "Социальные сеть художника"
         default_related_name = "social_medias"
 
 
@@ -335,4 +335,279 @@ class Award(models.Model):
     name = models.CharField(
         verbose_name="Название",
         max_length=MAX_LENGTH_CHARFIELD,
+    )
+
+
+class Collection(models.Model):
+    name = models.CharField(
+        verbose_name="Название",
+        max_length=MAX_LENGTH_CHARFIELD,
+        unique=True,
+    )
+    created_at = models.DateField(
+        verbose_name="Дата создания коллекции",
+        validators=[
+            MaxValueValidator(
+                limit_value=date.today,
+            )
+        ],
+        null=True,
+        blank=True,
+    )
+    private = models.BooleanField(
+        verbose_name="Частная коллекция",
+        default=False,
+    )
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Коллекция"
+        verbose_name_plural = "Коллекции"
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class ArtObject(models.Model):
+    """Model ArtObject."""
+    class SaleStatus(models.IntegerChoices):
+        ONSALE = 1, 'В продаже'
+        SOLD = 2, 'Продана'
+        NOTFORSALE = 3, 'Не продается'
+
+    class Orientation(models.IntegerChoices):
+        HORIZONTAL = 1, 'Горизонтальная'
+        VERTICAL = 2, 'Вертикальная'
+
+    class TagSize(models.IntegerChoices):
+        SMALL = 1, 'до 40 см'
+        MEDIUM = 2, '40 - 100 см'
+        LARGE = 3, '100 - 160 см'
+        OVERSIZE = 4, 'более 160 см'
+
+
+    class SaleStatus(models.IntegerChoices):
+        ONSALE = 1, 'В продаже'
+        SOLD = 2, 'Продана'
+        NOTFORSALE = 3, 'Не продается'
+
+    owner = models.ForeignKey(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='artobjects',
+        verbose_name='ID пользователя',
+    )
+    vendor = models.IntegerField(
+        verbose_name='Артикул',
+        unique=True,
+    )
+    name = models.CharField(
+        verbose_name='Название',
+        max_length = MAX_LENGTH_CHARFIELD,
+    )
+    date_of_creation = models.DateField(
+        verbose_name='Дата создания'
+    )
+    status = models.PositiveSmallIntegerField(
+        verbose_name="Статус объекта",
+        choices=SaleStatus.choices,
+        default=SaleStatus.choices[2],
+    )
+    city_sold = models.ForeignKey(
+        'core.City',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='artobjects',
+        verbose_name='ID города',
+    )
+    artist = models.ForeignKey(
+        'Artist',
+        on_delete=models.CASCADE,
+        related_name='artobjects',
+        verbose_name='ID художника',
+    )
+    category = models.ForeignKey(
+        'Category',
+        on_delete=models.CASCADE,
+        related_name='artobjects',
+        verbose_name='ID категории',
+    )
+    colors = models.ManyToManyField(
+        'Color',
+        on_delete=models.CASCADE,
+        related_name='artobjects',
+        verbose_name='Цветовая гамма',
+    )
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.CASCADE,
+        related_name='artobjects',
+        verbose_name='ID жанра',
+    )
+    width = models.PositiveIntegerField(
+        verbose_name='Ширина объекта'
+    )
+    height = models.PositiveIntegerField(
+        verbose_name='Высота объекта'
+    )
+    material_art_object = models.ForeignKey(
+        'MaterialArtObject',
+        on_delete=models.CASCADE,
+        related_name='artobjects',
+        verbose_name='Материал',
+    )
+    base_art_object = models.ForeignKey(
+        'BaseArtObject',
+        on_delete=models.CASCADE,
+        related_name='artobjects',
+        verbose_name='Основа',
+    )
+    style = models.ForeignKey(
+        'Style',
+        on_delete=models.CASCADE,
+        related_name='artobjects',
+        verbose_name='Стиль',
+    )
+    collection = models.ForeignKey(
+        'Collection',
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='artobjects',
+        verbose_name='В коллекции',
+    )
+    unique = models.BooleanField(
+        default=False
+    )
+    art_investment = models.ForeignKey(
+        default=False
+    )
+    images = models.ManyToManyField(
+        'core.Image',
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='artobjects',
+        verbose_name='Изображения объекта',
+    )
+    main_image = models.OneToOneField(
+        'core.Image',
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='artobjects',
+        verbose_name='Изображения объекта',
+    )
+    max_amount = models.IntegerField(
+        default=1,
+        verbose_name = 'Количество объектов в продаже',
+    )
+    favourited_by = models.ManyToManyField(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='artobjects',
+        verbose_name='ID пользователя',
+    )
+    orientation = models.PositiveSmallIntegerField( #При сохранении вычисляется
+        verbose_name="Ориентация",
+        choices=Orientation.choices,
+        blank=True,
+    )
+    tag_size = models.PositiveSmallIntegerField(  #При сохранении вычисляется
+        verbose_name="Тег размера",
+        choices=TagSize.choices,
+        blank=True,
+    )
+
+
+class ABSModelWithArtObjectField(models.Model):
+    artobject = models.ForeignKey(
+        'ArtObject',
+        verbose_name='Арт объект',
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        abstract = True
+
+
+class Gallery(models.Model):
+    name = models.CharField(
+        verbose_name="Название",
+        max_length=MAX_LENGTH_CHARFIELD,
+    )
+    city = models.ForeignKey(
+        'core.City',
+        verbose_name="Город",
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Галерея"
+        verbose_name_plural = "Галереи"
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class Show(ABSModelWithArtObjectField):
+    name = models.CharField(
+        verbose_name="Название",
+        max_length=MAX_LENGTH_CHARFIELD,
+    )
+    started_at = models.DateField(
+        verbose_name="Начало",
+        validators=[
+            MaxValueValidator(
+                limit_value=date.today,
+            )
+        ],
+    )
+    ended_at = models.DateField(
+        verbose_name="Конец",
+        validators=[
+            MaxValueValidator(
+                limit_value=date.today,
+            )
+        ],
+    )
+    place = models.ForeignKey(
+        'Gallery',
+        on_delete=models.CASCADE,
+        related_name='shows',
+        verbose_name='ID галереи',
+    )
+    personal = models.BooleanField(
+        verbose_name="Персональная",
+        default=False,
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'place'],
+                name='unique_show'
+            )
+        ]
+        ordering = ["name"]
+        verbose_name = "Выставка"
+        verbose_name_plural = "Выставки"
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class Price(ABSModelWithArtObjectField):
+    price = models.DecimalField(
+        verbose_name="Цена"
+    )
+    created_at = models.DateField(
+        verbose_name="Дата создания",
+        validators=[
+            MaxValueValidator(
+                limit_value=date.today,
+            )
+        ],
+        auto_now_add=date.today()
     )

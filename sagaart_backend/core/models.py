@@ -87,6 +87,7 @@ class SocialMedia(models.Model):
         blank=False,
         verbose_name="Название социальной сети",
         help_text="Введите название социальной сети",
+        unique=True,
     )
 
     class Meta:

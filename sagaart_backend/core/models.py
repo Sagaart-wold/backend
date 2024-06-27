@@ -39,6 +39,12 @@ class City(models.Model):
     )
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['name', 'country'],
+                name='unique_city'
+            )
+        ]
         ordering = ["name"]
         verbose_name = "Город"
         verbose_name_plural = "Города"
@@ -58,7 +64,7 @@ class Images(models.Model):
         null=True,
     )
     link = models.ImageField(
-        upload_to='artobjects/',
+        upload_to='sagaart/',
         blank=False,
         help_text='Загрузите изображение',
         verbose_name='Изображение',

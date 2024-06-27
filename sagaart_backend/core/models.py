@@ -64,7 +64,7 @@ class Images(models.Model):
         null=True,
     )
     link = models.ImageField(
-        upload_to='sagaart/',
+        upload_to='images/',
         blank=False,
         help_text='Загрузите изображение',
         verbose_name='Изображение',

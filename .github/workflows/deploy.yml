@@ -75,7 +75,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             status_code=$(curl -o /dev/null -s -w "%{http_code}\n" http://158.160.171.226)
-            echo "::set-output name=status_code::$status_code"
+            echo "STATUS_CODE=status_code" >> $GITHUB_ENV
 
       - name: send messsage
         if: always()
@@ -86,5 +86,5 @@ jobs:
           message: | 
             Обновление репозиториев - ${{ steps.update-repo.conclusion }}!
             Рестарт Докера - ${{ steps.restart-docker-compose.conclusion }}!
-            Статус код сайта - ${{ steps.check-url.outputs.status_code }}
+            Статус код сайта - $STATUS_CODE
             

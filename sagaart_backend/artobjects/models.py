@@ -4,22 +4,16 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator
 from django.db import models
 
+from core.models import ABSModelWithUniqueName
 from .constants import MAX_LENGTH_CHARFIELD, MAX_LENGTH_TEXTFIELD
 
 User = get_user_model()
 
 
-class Category(models.Model):
+class Category(ABSModelWithUniqueName):
     """Model Category."""
-    name = models.CharField(
-        max_length=MAX_LENGTH_CHARFIELD,
-        verbose_name="Название категории",
-        help_text="Введите название категории",
-        unique=True,
-    )
 
     class Meta:
-        ordering = ["name"]
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
 
@@ -27,17 +21,10 @@ class Category(models.Model):
         return f'{self.name}'
 
 
-class Color(models.Model):
+class Color(ABSModelWithUniqueName):
     """Model Color."""
-    name = models.CharField(
-        max_length=MAX_LENGTH_CHARFIELD,
-        verbose_name="Название цветовой палитры",
-        help_text="Введите название цветовой палитры",
-        unique=True,
-    )
 
     class Meta:
-        ordering = ["name"]
         verbose_name = "Цветовая палитра"
         verbose_name_plural = "цветовые палитры"
 
@@ -45,17 +32,10 @@ class Color(models.Model):
         return f'{self.name}'
 
 
-class Genre(models.Model):
+class Genre(ABSModelWithUniqueName):
     """Model Genre."""
-    name = models.CharField(
-        max_length=MAX_LENGTH_CHARFIELD,
-        verbose_name="Название жанра",
-        help_text="Введите название жанра",
-        unique=True,
-    )
 
     class Meta:
-        ordering = ["name"]
         verbose_name = "Жанра"
         verbose_name_plural = "Жанры"
 
@@ -63,17 +43,10 @@ class Genre(models.Model):
         return f'{self.name}'
 
 
-class MaterialArtObject(models.Model):
+class MaterialArtObject(ABSModelWithUniqueName):
     """Model MaterialArtObject."""
-    name = models.CharField(
-        max_length=MAX_LENGTH_CHARFIELD,
-        verbose_name="Название материала арт объекта",
-        help_text="Введите название материала арт объекта",
-        unique=True,
-    )
 
     class Meta:
-        ordering = ["name"]
         verbose_name = "Материал арт объекта"
         verbose_name_plural = "материалы арт объекта"
 
@@ -81,17 +54,10 @@ class MaterialArtObject(models.Model):
         return f'{self.name}'
 
 
-class BaseArtObject(models.Model):
+class BaseArtObject(ABSModelWithUniqueName):
     """Model BaseArtObject."""
-    name = models.CharField(
-        max_length=MAX_LENGTH_CHARFIELD,
-        verbose_name="Название основы арт объекта",
-        help_text="Введите название основы арт объекта",
-        unique=True,
-    )
 
     class Meta:
-        ordering = ["name"]
         verbose_name = "Основа арт объекта"
         verbose_name_plural = "Основы арт объекта"
 
@@ -100,17 +66,10 @@ class BaseArtObject(models.Model):
 
 
 
-class Style(models.Model):
+class Style(ABSModelWithUniqueName):
     """Model Style."""
-    name = models.CharField(
-        max_length=MAX_LENGTH_CHARFIELD,
-        verbose_name="Название стиля",
-        help_text="Введите название стиля",
-        unique=True,
-    )
 
     class Meta:
-        ordering = ["name"]
         verbose_name = "Стиль"
         verbose_name_plural = "Стили"
 
@@ -119,6 +78,7 @@ class Style(models.Model):
 
 
 class Artist(models.Model):
+    """Model Artist."""
     class Sex(models.IntegerChoices):
         MALE = 1, 'М'
         FEMALE = 2, 'Ж'
@@ -202,6 +162,7 @@ class Artist(models.Model):
 
 
 class ABSModelWithArtistField(models.Model):
+    """Абстрактная модель. Добавляет связь с художником."""
     artist = models.ForeignKey(
         'Artist',
         verbose_name='Художник',
@@ -213,8 +174,9 @@ class ABSModelWithArtistField(models.Model):
 
 
 class ArtistSocialMedia(ABSModelWithArtistField):
+    """Model ArtistSocialMedia."""
     link = models.URLField(
-        verbose_name='Ссылка',
+        verbose_name='Ссылка на аккаунт',
         unique=True,
     )
     social_media = models.ForeignKey(
@@ -232,6 +194,7 @@ class ArtistSocialMedia(ABSModelWithArtistField):
 
 
 class TeachingActivities(ABSModelWithArtistField):
+    """Model TeachingActivities."""
     educational_institutions = models.ForeignKey(
         'EducationalInstitution',
         verbose_name='Учреждение',
@@ -263,6 +226,7 @@ class TeachingActivities(ABSModelWithArtistField):
 
 
 class Education(TeachingActivities):
+    """Model Education."""
     degree = models.CharField(
         verbose_name="Степень",
         max_length=MAX_LENGTH_CHARFIELD,
@@ -275,6 +239,7 @@ class Education(TeachingActivities):
 
 
 class EducationalInstitution(models.Model):
+    """Model EducationalInstitution."""
     class TypeEducationalInstitution(models.IntegerChoices):
         UNIVERSITY = 1, 'Университет'
         COLLEGE = 2, 'Колледж'
@@ -304,6 +269,7 @@ class EducationalInstitution(models.Model):
 
 
 class ArtistAward(ABSModelWithArtistField):
+    """Model ArtistAward."""
     award = models.ForeignKey(
         'Award',
         verbose_name='Награда',
@@ -326,24 +292,23 @@ class ArtistAward(ABSModelWithArtistField):
     )
 
     class Meta:
-        verbose_name = "Награда"
-        verbose_name_plural = "Награды"
+        verbose_name = "Награда художника"
+        verbose_name_plural = "Награды художника"
         default_related_name = "artist_awards"
 
 
-class Award(models.Model):
-    name = models.CharField(
-        verbose_name="Название",
-        max_length=MAX_LENGTH_CHARFIELD,
-    )
+class Award(ABSModelWithUniqueName):
+
+    class Meta:
+        verbose_name = "Награда"
+        verbose_name_plural = "Награды"
+
+    def __str__(self):
+        return f'{self.name}'
 
 
-class Collection(models.Model):
-    name = models.CharField(
-        verbose_name="Название",
-        max_length=MAX_LENGTH_CHARFIELD,
-        unique=True,
-    )
+class Collection(ABSModelWithUniqueName):
+    """Model Collection."""
     created_at = models.DateField(
         verbose_name="Дата создания коллекции",
         validators=[
@@ -360,7 +325,6 @@ class Collection(models.Model):
     )
 
     class Meta:
-        ordering = ["name"]
         verbose_name = "Коллекция"
         verbose_name_plural = "Коллекции"
 
@@ -368,7 +332,7 @@ class Collection(models.Model):
         return f'{self.name}'
 
 
-class ArtObject(models.Model):
+class ArtObject(ABSModelWithArtistField):
     """Model ArtObject."""
     class SaleStatus(models.IntegerChoices):
         ONSALE = 1, 'В продаже'
@@ -384,12 +348,6 @@ class ArtObject(models.Model):
         MEDIUM = 2, '40 - 100 см'
         LARGE = 3, '100 - 160 см'
         OVERSIZE = 4, 'более 160 см'
-
-
-    class SaleStatus(models.IntegerChoices):
-        ONSALE = 1, 'В продаже'
-        SOLD = 2, 'Продана'
-        NOTFORSALE = 3, 'Не продается'
 
     owner = models.ForeignKey(
         'User',
@@ -420,12 +378,6 @@ class ArtObject(models.Model):
         on_delete=models.SET_NULL,
         related_name='artobjects',
         verbose_name='ID города',
-    )
-    artist = models.ForeignKey(
-        'Artist',
-        on_delete=models.CASCADE,
-        related_name='artobjects',
-        verbose_name='ID художника',
     )
     category = models.ForeignKey(
         'Category',
@@ -519,8 +471,30 @@ class ArtObject(models.Model):
         blank=True,
     )
 
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Артобъект"
+        verbose_name_plural = "Артобъекты"
+
+    def __str__(self):
+        return f'{self.name}'
+
+    def save(self, *args, **kwargs):
+        self.orientation = 1 if (self.width > self.height) else 2
+        bigger = max((self.width, self.height), key=lambda i: int(i))
+        if bigger <= 40:
+            tag_size = self.TagSize.choices[1]
+        elif bigger <= 100:
+            tag_size = self.TagSize.choices[2]
+        elif bigger <= 160:
+            tag_size = self.TagSize.choices[3]
+        else: tag_size = self.TagSize.choices[4]
+        self.tag_size = tag_size
+        super().save(*args, **kwargs)
+
 
 class ABSModelWithArtObjectField(models.Model):
+
     artobject = models.ForeignKey(
         'ArtObject',
         verbose_name='Арт объект',
@@ -532,6 +506,7 @@ class ABSModelWithArtObjectField(models.Model):
 
 
 class Gallery(models.Model):
+    """Model Gallery."""
     name = models.CharField(
         verbose_name="Название",
         max_length=MAX_LENGTH_CHARFIELD,
@@ -552,6 +527,7 @@ class Gallery(models.Model):
 
 
 class Show(ABSModelWithArtObjectField):
+    """Model Show."""
     name = models.CharField(
         verbose_name="Название",
         max_length=MAX_LENGTH_CHARFIELD,
@@ -584,12 +560,6 @@ class Show(ABSModelWithArtObjectField):
     )
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['name', 'place'],
-                name='unique_show'
-            )
-        ]
         ordering = ["name"]
         verbose_name = "Выставка"
         verbose_name_plural = "Выставки"
@@ -599,6 +569,7 @@ class Show(ABSModelWithArtObjectField):
 
 
 class Price(ABSModelWithArtObjectField):
+    """Model Price."""
     price = models.DecimalField(
         verbose_name="Цена"
     )
@@ -611,3 +582,7 @@ class Price(ABSModelWithArtObjectField):
         ],
         auto_now_add=date.today()
     )
+
+    class Meta:
+        verbose_name = "Цена объекта"
+        verbose_name_plural = "История цен объектов"

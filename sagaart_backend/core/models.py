@@ -3,15 +3,27 @@ from django.db import models
 from .constants import MAX_LENGTH_CHARFIELD
 # Файл с константами предлагаю оставить в core
 
-class Country(models.Model):
-    """Model Country."""
+
+# core/models.py
+from django.db import models
+
+
+class ABSModelWithUniqueName(models.Model):
+    """Абстрактная модель. Добавляет обязательное уникальное поле name."""
     name = models.CharField(
         max_length=MAX_LENGTH_CHARFIELD,
-        blank=False,
-        verbose_name="Название страны",
-        help_text="Введите название страны",
+        verbose_name="Название",
+        help_text="Введите название",
         unique=True,
     )
+
+    class Meta:
+        abstract = True
+        ordering = ["name"]
+
+
+class Country(ABSModelWithUniqueName):
+    """Model Country."""
 
     class Meta:
         ordering = ["name"]
@@ -26,14 +38,12 @@ class City(models.Model):
     """Model City."""
     name = models.CharField(
         max_length=MAX_LENGTH_CHARFIELD,
-        blank=False,
         verbose_name="Название города",
         help_text="Введите название города",
     )
     country = models.ForeignKey(
         Country,
         on_delete=models.CASCADE,
-        blank=False,
         verbose_name="id страны",
         related_name='cities'
     )
@@ -65,7 +75,6 @@ class Images(models.Model):
     )
     link = models.ImageField(
         upload_to='images/',
-        blank=False,
         help_text='Загрузите изображение',
         verbose_name='Изображение',
     )
@@ -80,18 +89,10 @@ class Images(models.Model):
         verbose_name_plural = "Изображения"
 
 
-class SocialMedia(models.Model):
+class SocialMedia(ABSModelWithUniqueName):
     """Model SocialMedia."""
-    name = models.CharField(
-        max_length=MAX_LENGTH_CHARFIELD,
-        blank=False,
-        verbose_name="Название социальной сети",
-        help_text="Введите название социальной сети",
-        unique=True,
-    )
 
     class Meta:
-        ordering = ["name"]
         verbose_name = "Социальная сеть"
         verbose_name_plural = "Социальные сети"
 

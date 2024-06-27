@@ -1,11 +1,11 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-app_name = 'api'
+from .views import ArtistViewSet
 
-router_v1 = DefaultRouter()
-
+router = DefaultRouter()
+router.register('artists', ArtistViewSet, basename='artists')
 
 urlpatterns = [
-    path('v1/', include(router_v1.urls)),
+    path('', include(router.urls)),
 ]

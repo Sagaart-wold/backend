@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - add/check-status-code
 
 
 jobs:
@@ -67,15 +68,9 @@ jobs:
 
       - name: Check url
         id: check-url
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
-          script: |
+        run: |
             status_code=$(curl -o /dev/null -s -w "%{http_code}\n" http://158.160.171.226)
-            echo "STATUS_CODE=$status_code" >> $GITHUB_ENV
+            echo "::debug::$status_code"
 
       - name: send messsage
         if: always()
@@ -86,5 +81,5 @@ jobs:
           message: | 
             Обновление репозиториев - ${{ steps.update-repo.conclusion }}!
             Рестарт Докера - ${{ steps.restart-docker-compose.conclusion }}!
-            Статус код сайта - $STATUS_CODE
+            Статус код сайта - ${{ steps.check-url.debug }}
             

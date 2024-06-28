@@ -18,8 +18,7 @@ CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
 ]
 
-
-# Application definition
+AUTH_USER_MODEL = 'users.User'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -34,7 +33,7 @@ INSTALLED_APPS = [
     'django_filters',
     'djoser',
     'corsheaders',
-    'core.apps.CoreConfig'
+    'core.apps.CoreConfig',
     'users.apps.UsersConfig',
     'artobjects.apps.ArtobjectsConfig',
     'api.apps.ApiConfig'

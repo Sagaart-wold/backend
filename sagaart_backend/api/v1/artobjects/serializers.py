@@ -3,17 +3,34 @@ from rest_framework import serializers
 from artobjects.models import Artist
 
 
-class ArtistWriteSerializer(serializers.ModelSerializer):
+class BaseArtistSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Artist
-        fields = "__all__"
+        fields = (
+            'id',
+            "first_name",
+            "last_name",
+            "description",
+            "sex",
+            "date_of_birth",
+            "date_of_death",
+            "personal_style",
+            "city_of_birth",
+            "city_of_living",
+            "photo",
+            "favorited_by"
+        )
 
 
-class ArtistReadSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Artist
-        fields = "__all__"
-        read_only_fields = fields
+class ArtistWriteSerializer(BaseArtistSerializer):
+    class Meta(BaseArtistSerializer.Meta):
+        pass
+
+
+class ArtistReadSerializer(BaseArtistSerializer):
+    class Meta(BaseArtistSerializer.Meta):
+        read_only_fields = BaseArtistSerializer.Meta.fields
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)

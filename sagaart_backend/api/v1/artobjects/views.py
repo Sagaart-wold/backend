@@ -1,24 +1,23 @@
-from rest_framework import viewsets, permissions
+import logging
+
+from rest_framework import generics, mixins
 
 from artobjects.models import Artist
+from rest_framework.viewsets import GenericViewSet
 
 from .serializers import ArtistWriteSerializer, ArtistReadSerializer
 
 
-class ArtistViewSet(viewsets.ModelViewSet):
-    http_method_names = ['get', 'post', 'patch']
+class ArtistViewSet(mixins.RetrieveModelMixin,
+                    mixins.ListModelMixin,
+                    GenericViewSet):
+    serializer_class = ArtistReadSerializer
 
     def get_queryset(self):
         return Artist.objects.select_related(
             'city_of_birth',
             'city_of_living',
             'photo'
-        ).prefect_related(
+        ).prefetch_related(
             'favorited_by'
         )
-
-    def get_serializer_class(self):
-        if self.request.method in permissions.SAFE_METHODS:
-            return ArtistReadSerializer
-        if self.request.user.is_staff:
-            return ArtistWriteSerializer

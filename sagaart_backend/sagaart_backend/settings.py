@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'django_filters',
     'djoser',
     'corsheaders',
-    'core.apps.CoreConfig'
+    'core.apps.CoreConfig',
     'users.apps.UsersConfig',
     'artobjects.apps.ArtobjectsConfig',
     'api.apps.ApiConfig'

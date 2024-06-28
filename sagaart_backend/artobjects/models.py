@@ -65,7 +65,6 @@ class BaseArtObject(ABSModelWithUniqueName):
         return f'{self.name}'
 
 
-
 class Style(ABSModelWithUniqueName):
     """Model Style."""
 
@@ -128,6 +127,7 @@ class Artist(models.Model):
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
+        related_name='city_of_birth'
     )
     city_of_living = models.ForeignKey(
         'core.City',
@@ -135,6 +135,8 @@ class Artist(models.Model):
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
+        related_name='city_of_living'
+
     )
     personal_style = models.BooleanField(
         verbose_name="Персональный стиль",
@@ -151,7 +153,6 @@ class Artist(models.Model):
         to=User,
         blank=True,
         verbose_name="Добавили в избранное",
-        related_name="favorite_artists",
     )
 
     class Meta:
@@ -350,9 +351,9 @@ class ArtObject(ABSModelWithArtistField):
         OVERSIZE = 4, 'более 160 см'
 
     owner = models.ForeignKey(
-        'User',
+        User,
         on_delete=models.CASCADE,
-        related_name='artobjects',
+        related_name='owner',
         verbose_name='ID пользователя',
     )
     vendor = models.IntegerField(
@@ -361,7 +362,7 @@ class ArtObject(ABSModelWithArtistField):
     )
     name = models.CharField(
         verbose_name='Название',
-        max_length = MAX_LENGTH_CHARFIELD,
+        max_length=MAX_LENGTH_CHARFIELD,
     )
     date_of_creation = models.DateField(
         verbose_name='Дата создания'
@@ -376,25 +377,21 @@ class ArtObject(ABSModelWithArtistField):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='artobjects',
+        related_name='city_sold',
         verbose_name='ID города',
     )
     category = models.ForeignKey(
         'Category',
         on_delete=models.CASCADE,
-        related_name='artobjects',
         verbose_name='ID категории',
     )
     colors = models.ManyToManyField(
         'Color',
-        on_delete=models.CASCADE,
-        related_name='artobjects',
         verbose_name='Цветовая гамма',
     )
     genre = models.ForeignKey(
         Genre,
         on_delete=models.CASCADE,
-        related_name='artobjects',
         verbose_name='ID жанра',
     )
     width = models.PositiveIntegerField(
@@ -406,19 +403,18 @@ class ArtObject(ABSModelWithArtistField):
     material_art_object = models.ForeignKey(
         'MaterialArtObject',
         on_delete=models.CASCADE,
-        related_name='artobjects',
+        related_name='material',
         verbose_name='Материал',
     )
     base_art_object = models.ForeignKey(
         'BaseArtObject',
         on_delete=models.CASCADE,
-        related_name='artobjects',
+        related_name='base',
         verbose_name='Основа',
     )
     style = models.ForeignKey(
         'Style',
         on_delete=models.CASCADE,
-        related_name='artobjects',
         verbose_name='Стиль',
     )
     collection = models.ForeignKey(
@@ -426,20 +422,20 @@ class ArtObject(ABSModelWithArtistField):
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='artobjects',
         verbose_name='В коллекции',
     )
     unique = models.BooleanField(
-        default=False
+        default=False,
+        verbose_name='Уникальная работа',
     )
-    art_investment = models.ForeignKey(
-        default=False
+    art_investment = models.BooleanField(
+        default=False,
+        verbose_name='Вклад в искусство',
     )
     images = models.ManyToManyField(
         'core.Image',
         blank=True,
-        on_delete=models.SET_NULL,
-        related_name='artobjects',
+        related_name='images',
         verbose_name='Изображения объекта',
     )
     main_image = models.OneToOneField(
@@ -447,25 +443,23 @@ class ArtObject(ABSModelWithArtistField):
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='artobjects',
+        related_name='main_image',
         verbose_name='Изображения объекта',
     )
     max_amount = models.IntegerField(
         default=1,
-        verbose_name = 'Количество объектов в продаже',
+        verbose_name='Количество объектов в продаже',
     )
     favourited_by = models.ManyToManyField(
-        'User',
-        on_delete=models.CASCADE,
-        related_name='artobjects',
+        User,
         verbose_name='ID пользователя',
     )
-    orientation = models.PositiveSmallIntegerField( #При сохранении вычисляется
+    orientation = models.PositiveSmallIntegerField(  # При сохранении вычисляется
         verbose_name="Ориентация",
         choices=Orientation.choices,
         blank=True,
     )
-    tag_size = models.PositiveSmallIntegerField(  #При сохранении вычисляется
+    tag_size = models.PositiveSmallIntegerField(  # При сохранении вычисляется
         verbose_name="Тег размера",
         choices=TagSize.choices,
         blank=True,
@@ -571,7 +565,9 @@ class Show(ABSModelWithArtObjectField):
 class Price(ABSModelWithArtObjectField):
     """Model Price."""
     price = models.DecimalField(
-        verbose_name="Цена"
+        verbose_name="Цена",
+        max_digits=10,
+        decimal_places=2,
     )
     created_at = models.DateField(
         verbose_name="Дата создания",

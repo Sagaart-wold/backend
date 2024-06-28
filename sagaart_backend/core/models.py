@@ -63,7 +63,7 @@ class City(models.Model):
         return f'{self.name}'
 
 
-class Images(models.Model):
+class Image(models.Model):
     """Model Images."""
     name = models.CharField(
         max_length=MAX_LENGTH_CHARFIELD,

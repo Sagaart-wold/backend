@@ -28,13 +28,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'drf_yasg',
     'rest_framework',
     'rest_framework.authtoken',
     'django_filters',
     'djoser',
     'corsheaders',
-    'core.apps.CoreConfig'
+    'core.apps.CoreConfig',
     'users.apps.UsersConfig',
     'artobjects.apps.ArtobjectsConfig',
     'api.apps.ApiConfig'
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.common.CommonMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

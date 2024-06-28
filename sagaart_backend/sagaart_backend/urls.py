@@ -6,7 +6,6 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
@@ -41,10 +40,11 @@ urlpatterns += [
 ]
 
 if settings.DEBUG:
-    urlpatterns += [static(
-        settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT
-    ),
-        path("__debug__/", include("debug_toolbar.urls")),
-    ]
+    import debug_toolbar
 
+    urlpatterns += [
+        path("__debug__/", include("debug_toolbar.urls"))
+    ] + static(
+            settings.MEDIA_URL,
+            document_root=settings.MEDIA_ROOT
+        )

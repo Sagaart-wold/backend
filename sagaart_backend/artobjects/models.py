@@ -191,7 +191,7 @@ class ArtistSocialMedia(ABSModelWithArtistField):
     class Meta:
         verbose_name = "Социальная сеть художника"
         verbose_name_plural = "Социальные сеть художника"
-        default_related_name = "social_medias"
+        default_related_name = "artist_social_medias"
 
 
 class TeachingActivities(ABSModelWithArtistField):
@@ -256,7 +256,7 @@ class EducationalInstitution(models.Model):
         choices=TypeEducationalInstitution.choices,
         blank=True,
     )
-    city_of_birth = models.ForeignKey(
+    city = models.ForeignKey(
         'core.City',
         verbose_name="Город",
         null=True,
@@ -266,7 +266,7 @@ class EducationalInstitution(models.Model):
     class Meta:
         verbose_name = "Учебное заведение"
         verbose_name_plural = "Учебные Заведения"
-        default_related_name = "educational_institution"
+        default_related_name = "educational_institutions"
 
 
 class ArtistAward(ABSModelWithArtistField):
@@ -377,7 +377,6 @@ class ArtObject(ABSModelWithArtistField):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='artobjects',
         verbose_name='ID города',
     )
     category = models.ForeignKey(
@@ -468,6 +467,8 @@ class ArtObject(ABSModelWithArtistField):
         ordering = ["name"]
         verbose_name = "Артобъект"
         verbose_name_plural = "Артобъекты"
+        default_related_name = "artobjects"
+
 
     def __str__(self):
         return f'{self.name}'

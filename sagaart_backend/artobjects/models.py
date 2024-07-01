@@ -127,11 +127,11 @@ class Artist(models.Model):
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='city_of_birth'
+        related_name='artists_hometown'
     )
     city_of_living = models.ForeignKey(
         'core.City',
-        verbose_name="Город проживания",
+        verbose_name="artists_living_city",
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
@@ -353,8 +353,8 @@ class ArtObject(ABSModelWithArtistField):
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='owner',
         verbose_name='ID пользователя',
+        related_name='own_artobjects'
     )
     vendor = models.IntegerField(
         verbose_name='Артикул',
@@ -377,7 +377,7 @@ class ArtObject(ABSModelWithArtistField):
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
-        related_name='city_sold',
+        related_name='artobjects',
         verbose_name='ID города',
     )
     category = models.ForeignKey(
@@ -403,13 +403,11 @@ class ArtObject(ABSModelWithArtistField):
     material_art_object = models.ForeignKey(
         'MaterialArtObject',
         on_delete=models.CASCADE,
-        related_name='material',
         verbose_name='Материал',
     )
     base_art_object = models.ForeignKey(
         'BaseArtObject',
         on_delete=models.CASCADE,
-        related_name='base',
         verbose_name='Основа',
     )
     style = models.ForeignKey(
@@ -435,16 +433,16 @@ class ArtObject(ABSModelWithArtistField):
     images = models.ManyToManyField(
         'core.Image',
         blank=True,
-        related_name='images',
         verbose_name='Изображения объекта',
+
     )
     main_image = models.OneToOneField(
         'core.Image',
         blank=True,
         null=True,
         on_delete=models.SET_NULL,
-        related_name='main_image',
         verbose_name='Изображения объекта',
+        related_name='artobjects_as_main_image'
     )
     max_amount = models.IntegerField(
         default=1,
@@ -453,6 +451,7 @@ class ArtObject(ABSModelWithArtistField):
     favourited_by = models.ManyToManyField(
         User,
         verbose_name='ID пользователя',
+        related_name="favorite_artobjects",
     )
     orientation = models.PositiveSmallIntegerField(  # При сохранении вычисляется
         verbose_name="Ориентация",
@@ -545,7 +544,6 @@ class Show(ABSModelWithArtObjectField):
     place = models.ForeignKey(
         'Gallery',
         on_delete=models.CASCADE,
-        related_name='shows',
         verbose_name='ID галереи',
     )
     personal = models.BooleanField(
@@ -557,6 +555,7 @@ class Show(ABSModelWithArtObjectField):
         ordering = ["name"]
         verbose_name = "Выставка"
         verbose_name_plural = "Выставки"
+        default_related_name = 'shows'
 
     def __str__(self):
         return f'{self.name}'

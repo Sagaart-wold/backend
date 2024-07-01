@@ -1,22 +1,23 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
-from enum import Enum
+from django.db import models
 
 
-class UserRole(Enum):
-    ADMIN = 'admin'
-    USER = 'user'
-    SELLER = 'seller'
+class UserRole(models.IntegerChoices):
+    ADMIN = 1, 'Admin'
+    SELLER = 2, 'Seller'
+    USER = 3, 'User'
 
 
 class User(AbstractUser):
+    username = None
     email = models.EmailField(unique=True)
-    phone = models.CharField(max_length=15, blank=True, null=True)
-    address = models.TextField(blank=True, null=True)
-
-    role = models.CharField(
-        choices=[(role.value, role.name) for role in UserRole],
-        default=UserRole.USER.value,
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    phone = models.CharField(max_length=30, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    role = models.PositiveSmallIntegerField(
+        choices=UserRole.choices,
+        default=UserRole.USER,
     )
 
     USERNAME_FIELD = 'email'

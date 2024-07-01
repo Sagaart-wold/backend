@@ -35,14 +35,6 @@ class ArtistReadSerializer(BaseArtistSerializer):
     class Meta(BaseArtistSerializer.Meta):
         read_only_fields = BaseArtistSerializer.Meta.fields
 
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        if not ret.get(
-            "date_of_death", None
-        ):  # Удаляем поле дата смерти, если оно пустое
-            ret.pop("date_of_death")
-        return ret
-
     def get_is_favorite(self, instance):
         user = self.context["request"].user
         return (

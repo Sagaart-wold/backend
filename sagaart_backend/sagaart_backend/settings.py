@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'users.apps.UsersConfig',
     'artobjects.apps.ArtobjectsConfig',
-    'api.apps.ApiConfig'
+    'api.apps.ApiConfig',
+    'analytics.apps.AnalyticsConfig',
 ]
 
 MIDDLEWARE = [

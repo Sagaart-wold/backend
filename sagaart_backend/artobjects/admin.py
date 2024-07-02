@@ -59,8 +59,9 @@ class ArtistAdmin(admin.ModelAdmin):
 
     raw_id_fields = ['city_of_birth',
                      'city_of_living',
-                     'photo',
-                     'favorited_by']
+                     'photo',]
+    filter_horizontal=('favorited_by',)
+
 
 
 @admin.register(ArtistSocialMedia)
@@ -140,6 +141,7 @@ class CollectionAdmin(admin.ModelAdmin):
 @admin.register(ArtObject)
 class ArtObjectAdmin(admin.ModelAdmin):
     list_display = ['name',
+                    'artist',
                     'owner',
                     'vendor',
                     'status',
@@ -158,15 +160,14 @@ class ArtObjectAdmin(admin.ModelAdmin):
     raw_id_fields = ['owner',
                      'city_sold',
                      'category',
-                     'colors',
                      'genre',
                      'material_art_object',
                      'base_art_object',
                      'style',
                      'collection',
-                     'images',
-                     'main_image',
-                     'favourited_by']
+                     'main_image']
+
+    filter_horizontal = ('favourited_by', 'colors',  'images',)
 
 
 @admin.register(Gallery)

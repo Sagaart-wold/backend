@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'analytics.apps.AnalyticsConfig',
     'article.apps.ArticleConfig',
+    'shoppingcart.apps.ShoppingCartConfig',
 ]
 
 MIDDLEWARE = [

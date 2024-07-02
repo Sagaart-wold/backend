@@ -23,7 +23,6 @@ class BaseArtistSerializer(serializers.ModelSerializer):
             "city_of_living",
             "personal_style",
             "photo",
-            "is_favorite",
         )
         depth = 2
 
@@ -143,14 +142,14 @@ class ArtObjectRetrieveSerializer(ArtObjectListSerializer):
         depth = 3
 
 
-
 class ArtistReadSerializer(BaseArtistSerializer):
     sex = serializers.SerializerMethodField(read_only=True)
     is_favorite = serializers.SerializerMethodField(read_only=True)
     artobjects = ArtObjectRetrieveSerializer(many=True)
 
     class Meta(BaseArtistSerializer.Meta):
-        read_only_fields = BaseArtistSerializer.Meta.fields
+        fields = BaseArtistSerializer.Meta.fields + ('artobjects', "is_favorite",)
+        read_only_fields = fields
 
     def get_is_favorite(self, instance):
         user = self.context["request"].user
@@ -160,5 +159,3 @@ class ArtistReadSerializer(BaseArtistSerializer):
 
     def get_sex(self, instance):
         return instance.get_sex_display()
-
-

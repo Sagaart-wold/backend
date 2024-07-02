@@ -2,13 +2,12 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
-class UserRole(models.IntegerChoices):
-    ADMIN = 1, 'Admin'
-    SELLER = 2, 'Seller'
-    USER = 3, 'User'
-
-
 class User(AbstractUser):
+    class UserRole(models.IntegerChoices):
+        ADMIN = 1, 'Admin'
+        SELLER = 2, 'Seller'
+        USER = 3, 'User'
+
     username = None
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)

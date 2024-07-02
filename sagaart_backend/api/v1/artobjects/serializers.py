@@ -27,6 +27,30 @@ class BaseArtistSerializer(serializers.ModelSerializer):
         depth = 2
 
 
+class BaseArtObjectsShortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ArtObject
+        fields = [
+            'id',
+            'vendor',
+            'name',
+            'status',
+            'category',
+            'colors',
+            'genre',
+            'width',
+            'height',
+            'material_art_object',
+            'base_art_object',
+            'style',
+            'main_image',
+            'orientation',
+            'tag_size',
+            'actual_price',
+        ]
+        depth = 3
+
+
 class ArtistWriteSerializer(BaseArtistSerializer):
     class Meta(BaseArtistSerializer.Meta):
         pass
@@ -145,7 +169,7 @@ class ArtObjectRetrieveSerializer(ArtObjectListSerializer):
 class ArtistReadSerializer(BaseArtistSerializer):
     sex = serializers.SerializerMethodField(read_only=True)
     is_favorite = serializers.SerializerMethodField(read_only=True)
-    artobjects = ArtObjectRetrieveSerializer(many=True)
+    artobjects = BaseArtObjectsShortSerializer(many=True)
 
     class Meta(BaseArtistSerializer.Meta):
         fields = BaseArtistSerializer.Meta.fields + ('artobjects', "is_favorite",)

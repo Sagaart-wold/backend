@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from artobjects.models import Artist, ArtObject, Show
+from artobjects.models import Artist, ArtistAward, ArtObject, Education, Show
 
 
 User = get_user_model()
@@ -166,13 +166,20 @@ class ArtObjectRetrieveSerializer(ArtObjectListSerializer):
         depth = 3
 
 
-class ArtistReadSerializer(BaseArtistSerializer):
-    sex = serializers.SerializerMethodField(read_only=True)
+class ArtistReadListSerializer(BaseArtistSerializer):
     is_favorite = serializers.SerializerMethodField(read_only=True)
-    artobjects = BaseArtObjectsShortSerializer(many=True)
+    artobjects = serializers.SerializerMethodField(read_only=True)
 
     class Meta(BaseArtistSerializer.Meta):
-        fields = BaseArtistSerializer.Meta.fields + ('artobjects', "is_favorite",)
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "city_of_living",
+            "artobjects",
+            "is_favorite",
+            "photo",
+        )
         read_only_fields = fields
 
     def get_is_favorite(self, instance):
@@ -183,3 +190,62 @@ class ArtistReadSerializer(BaseArtistSerializer):
 
     def get_sex(self, instance):
         return instance.get_sex_display()
+
+    def get_artobjects(self, instance):
+        artobject = instance.artobjects.first()
+        return BaseArtObjectsShortSerializer(artobject).data
+
+
+class AristAwardsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ArtistAward
+        fields = ('award', 'year', 'city',)
+        depth = 2
+
+
+class AristEducationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Education
+        fields = ('degree', 'ended_at', 'educational_institutions')
+        depth = 1
+
+
+class ArtistReadRetrieveSerializer(ArtistReadListSerializer):
+    is_favorite = serializers.SerializerMethodField(read_only=True)
+    artobjects = BaseArtObjectsShortSerializer(many=True)
+    shows = serializers.SerializerMethodField(read_only=True)
+    awards = serializers.SerializerMethodField(read_only=True)
+    education = serializers.SerializerMethodField(read_only=True)
+
+    class Meta(BaseArtistSerializer.Meta):
+        fields = BaseArtistSerializer.Meta.fields + (
+            'artobjects',
+            "is_favorite",
+            "shows",
+            'awards',
+            'education'
+        )
+        read_only_fields = fields
+
+    def get_is_favorite(self, instance):
+        user = self.context["request"].user
+        return (
+            user.is_authenticated and instance.favorited_by.filter(id=user.pk).exists()
+        )
+
+    def get_shows(self, instance):
+        shows = Show.objects.filter(
+            artobjects__in=instance.artobjects.all()
+        ).distinct()
+        serializer = ShowSerializer(shows, many=True)
+        return serializer.data
+
+    def get_awards(self, instance):
+        awards = instance.artist_awards.all()
+        serializer = AristAwardsSerializer(awards, many=True)
+        return serializer.data
+
+    def get_education(self, instance):
+        education = Education.objects.filter(artist=instance)  # Двойное наследование теряет обратную связь
+        serializer = AristEducationsSerializer(education, many=True)
+        return serializer.data

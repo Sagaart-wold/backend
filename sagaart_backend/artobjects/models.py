@@ -350,12 +350,6 @@ class ArtObject(ABSModelWithArtistField):
         LARGE = 3, '100 - 160 см'
         OVERSIZE = 4, 'более 160 см'
 
-    artist = models.ForeignKey(
-        'Artist',
-        on_delete=models.CASCADE,
-        verbose_name='Художник',
-    )
-
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

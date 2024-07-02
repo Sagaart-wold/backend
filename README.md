@@ -17,7 +17,217 @@
 
 ## Что сделано:
 
-...
+Версионирование API
+
+Тестовая БД с данными
+
+1. **Артобъект**
+
+* `api/v1/artobjects/` (**GET**): получить список всех артобъектов
+* Фильтр по полям 'category', 'genre', 'style', 'orientation','tag_size', 'colors', 'artist' (id поля):
+* Например `api/v1/artobjects/{id}/?category=1` (одно условие)
+* Например `api/v1/artobjects/{id}/?genre=1&orientation=1` (выполняются оба условия)
+
+**Пример запроса**
+
+```
+GET api/v1/artobjects/
+Права доступа: Доступно без токена
+Response:
+
+[
+    {
+        "id": 1,
+        "artist": {
+            "id": 1,
+            "first_name": "Вася",
+            "last_name": "Васечкин"
+        },
+        "vendor": 123,
+        "name": "Портрет",
+        "status": "В продаже",
+        "category": {
+            "id": 1,
+            "name": "живопись"
+        },
+        "colors": [
+            {
+                "id": 1,
+                "name": "светлые оттенки"
+            },
+            {
+                "id": 2,
+                "name": "темные оттенки"
+            }
+        ],
+        "genre": {
+            "id": 1,
+            "name": "портрет"
+        },
+        "width": 100,
+        "height": 80,
+        "material_art_object": {
+            "id": 1,
+            "name": "масло"
+        },
+        "base_art_object": {
+            "id": 1,
+            "name": "холст"
+        },
+        "style": {
+            "id": 1,
+            "name": "готика"
+        },
+        "main_image": null,
+        "is_favourite": false,
+        "orientation": "Горизонтальная",
+        "tag_size": "до 100 см",
+        "actual_price": 33333333
+    }
+]
+
+``` 
+
+* `api/v1/artobjects/{id}/` (**GET**): получить артобъект по id.
+
+**Пример запроса**
+``` 
+GET api/v1/artobjects/{id}/
+Права доступа: Доступно без токена.
+Response:
+{
+    "id": 1,
+    "owner": {
+        "id": 1,
+        "email": "aaa@host2011.com",
+        "first_name": "",
+        "last_name": "",
+        "phone": null,
+        "address": null
+    },
+    "artist": {
+        "id": 1,
+        "first_name": "Вася",
+        "last_name": "Васечкин",
+        "description": "что-то",
+        "sex": "М",
+        "date_of_birth": "2024-07-01",
+        "date_of_death": "2024-07-01",
+        "personal_style": false,
+        "city_of_birth": {
+            "id": 1,
+            "name": "Москва",
+            "country": {
+                "id": 1,
+                "name": "Россия"
+            }
+        },
+        "city_of_living": {
+            "id": 1,
+            "name": "Москва",
+            "country": {
+                "id": 1,
+                "name": "Россия"
+            }
+        },
+        "photo": null,
+        "is_favorite": false
+    },
+    "vendor": 123,
+    "name": "Портрет",
+    "date_of_creation": "2024-07-01",
+    "status": "В продаже",
+    "city_sold": {
+        "id": 1,
+        "name": "Москва",
+        "country": {
+            "id": 1,
+            "name": "Россия"
+        }
+    },
+    "category": {
+        "id": 1,
+        "name": "живопись"
+    },
+    "colors": [
+        {
+            "id": 1,
+            "name": "светлые оттенки"
+        },
+        {
+            "id": 2,
+            "name": "темные оттенки"
+        }
+    ],
+    "genre": {
+        "id": 1,
+        "name": "портрет"
+    },
+    "width": 100,
+    "height": 80,
+    "material_art_object": {
+        "id": 1,
+        "name": "масло"
+    },
+    "base_art_object": {
+        "id": 1,
+        "name": "холст"
+    },
+    "style": {
+        "id": 1,
+        "name": "готика"
+    },
+    "collection": null,
+    "unique": true,
+    "art_investment": true,
+    "images": [],
+    "main_image": null,
+    "max_amount": 1,
+    "is_favourite": false,
+    "orientation": "Горизонтальная",
+    "tag_size": "до 40 см",
+    "actual_price": 33333333,
+    "shows": [
+        {
+            "name": "Выставка-1",
+            "started_at": "2024-07-01",
+            "ended_at": "2024-07-02",
+            "place": {
+                "id": 1,
+                "name": "Московская галлерея",
+                "city": {
+                    "id": 1,
+                    "name": "Москва",
+                    "country": {
+                        "id": 1,
+                        "name": "Россия"
+                    }
+                }
+            },
+            "personal": false
+        },
+        {
+            "name": "Выставка-2",
+            "started_at": "2024-05-01",
+            "ended_at": "2024-05-03",
+            "place": {
+                "id": 1,
+                "name": "Московская галлерея",
+                "city": {
+                    "id": 1,
+                    "name": "Москва",
+                    "country": {
+                        "id": 1,
+                        "name": "Россия"
+                    }
+                }
+            },
+            "personal": false
+        }
+    ]
+}
+
+``` 
 
 
 ## Работа с Github в команде

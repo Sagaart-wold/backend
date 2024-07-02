@@ -2,6 +2,7 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from .views import ArtistViewSet
+from .views_artobjects import ArtObjectViewSet
 from .views_directories import (AwardViewSet, BaseArtObjectViewSet,
                                 CategoryViewSet, CityViewSet, ColorViewSet,
                                 GenreViewSet, MaterialArtObjectViewSet,
@@ -10,6 +11,7 @@ from .views_directories import (AwardViewSet, BaseArtObjectViewSet,
 
 router = DefaultRouter()
 router.register("artists", ArtistViewSet, basename="artists")
+router.register("artobjects", ArtObjectViewSet, basename="artobjects")
 # эндпоинты справочников
 router.register('awards', AwardViewSet, basename='awards')
 router.register('bases', BaseArtObjectViewSet, basename='bases')

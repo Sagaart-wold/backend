@@ -9,7 +9,13 @@ class UserRole(models.IntegerChoices):
 
 
 class User(AbstractUser):
-    username = None
+    username = models.CharField(
+        max_length=150,
+        unique=True,
+        null=True,
+        blank=True
+    )
+
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)

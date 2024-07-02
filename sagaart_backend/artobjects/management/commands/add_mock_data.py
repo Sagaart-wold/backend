@@ -106,7 +106,7 @@ class Command(BaseCommand):
                     art_investment=self.fake.boolean(),
                     tag_size=self.fake.random_int(1, 4),
                     orientation=self.fake.random_int(1, 2)
-                )
+                ) for i in range(self.amount * 5)
             ]
         )
 

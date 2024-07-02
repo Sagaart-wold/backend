@@ -5,8 +5,8 @@ from rest_framework.filters import SearchFilter
 from artobjects.models import ArtObject
 from rest_framework.viewsets import GenericViewSet
 
-from .serializers_artobjects import (ArtObjectListSerializer,
-                                     ArtObjectRetrieveSerializer)
+from .serializers import (ArtObjectListSerializer,
+                          ArtObjectRetrieveSerializer)
 
 
 class ArtObjectViewSet(mixins.RetrieveModelMixin,
@@ -21,7 +21,7 @@ class ArtObjectViewSet(mixins.RetrieveModelMixin,
         return ArtObject.objects.all().select_related(
             'artist', 'category', 'genre', 'material_art_object',
             'base_art_object', 'style', 'collection', 'main_image',
-            'city_sold__country','owner',
+            'city_sold__country', 'owner',
         ).prefetch_related('images', 'colors', 'favourited_by')
 
     def get_serializer_class(self):

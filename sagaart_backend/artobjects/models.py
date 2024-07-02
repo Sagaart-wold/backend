@@ -468,6 +468,11 @@ class ArtObject(ABSModelWithArtistField):
         choices=TagSize.choices,
         blank=True,
     )
+    actual_price = models.PositiveIntegerField(
+        verbose_name="Цена",
+        blank=True,
+        null=True,
+    )
 
     class Meta:
         ordering = ["name"]
@@ -526,7 +531,7 @@ class Gallery(models.Model):
         return f'{self.name}'
 
 
-class Show(ABSModelWithArtObjectField):
+class Show(models.Model):
     """Model Show."""
     name = models.CharField(
         verbose_name="Название",
@@ -557,6 +562,12 @@ class Show(ABSModelWithArtObjectField):
         verbose_name="Персональная",
         default=False,
     )
+    artobjects = models.ManyToManyField(
+        'ArtObject',
+        blank=True,
+        verbose_name='Артобъекты',
+    )
+
 
     class Meta:
         ordering = ["name"]
@@ -588,3 +599,6 @@ class Price(ABSModelWithArtObjectField):
     class Meta:
         verbose_name = "Цена объекта"
         verbose_name_plural = "История цен объектов"
+        default_related_name = 'prices'
+
+

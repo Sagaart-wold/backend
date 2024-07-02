@@ -17,7 +17,7 @@ class BaseArtistSerializer(serializers.ModelSerializer):
             "personal_style",
             "city_of_birth",
             "city_of_living",
-            "personal_style"
+            "personal_style",
             "photo",
             "is_favorite",
         )

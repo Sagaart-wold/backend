@@ -18,6 +18,7 @@ class CitySerializer(serializers.ModelSerializer):
 
 
 class ImageSerializer(serializers.ModelSerializer):
+    created_at = serializers.DateTimeField(format='%d.%m.%Y %H:%M:%S')
     class Meta:
         model = Image
         fields = ['id', 'name', 'link', 'created_at']
@@ -26,6 +27,7 @@ class ImageSerializer(serializers.ModelSerializer):
 class ArticleSerializer(serializers.ModelSerializer):
     city = CitySerializer()
     thumbnail = ImageSerializer()
+    created_at = serializers.DateTimeField(format='%d.%m.%Y %H:%M:%S')
 
     class Meta:
         model = Article

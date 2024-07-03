@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from artobjects.models import Artist, ArtistAward, ArtObject, Education, Show
-
+from shoppingcart.models import ShoppingCart
 
 User = get_user_model()
 
@@ -249,3 +249,41 @@ class ArtistReadRetrieveSerializer(ArtistReadListSerializer):
         education = Education.objects.filter(artist=instance)  # Двойное наследование теряет обратную связь
         serializer = AristEducationsSerializer(education, many=True)
         return serializer.data
+
+
+class ArtObjectsShortSerializer(ArtObjectListSerializer):
+
+    class Meta:
+        model = ArtObject
+        fields = [
+            'id',
+            'artist',
+            'vendor',
+            'name',
+            'width',
+            'height',
+            'main_image',
+            'orientation',
+            'actual_price',
+        ]
+        depth = 3
+
+class ShoppingCartSerializer(serializers.ModelSerializer):
+    artobject = ArtObjectsShortSerializer(read_only=True,)
+    class Meta:
+        fields = [
+            'artobject',
+            'amount'
+        ]
+        model = ShoppingCart
+
+    def validate(self, data):
+        request = self.context.get('request', None)
+        data = self.initial_data
+        print(data)
+        if request.method == 'POST':
+            if data['artobject'].shopping_cart.filter(
+                    user=data['user']).exists():
+                raise serializers.ValidationError(
+                    'This recipe is in shopping cart already!')
+        return data

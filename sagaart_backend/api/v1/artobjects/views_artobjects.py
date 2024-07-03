@@ -1,12 +1,16 @@
-from rest_framework import mixins, permissions
 from django_filters.rest_framework import DjangoFilterBackend
+
+from rest_framework import filters, permissions, mixins, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
+from rest_framework.viewsets import GenericViewSet
+from rest_framework.response import Response
 
 from artobjects.models import ArtObject
-from rest_framework.viewsets import GenericViewSet
-
+from shoppingcart.models import ShoppingCart
 from .serializers import (ArtObjectListSerializer,
-                          ArtObjectRetrieveSerializer)
+                          ArtObjectRetrieveSerializer,
+                          ShoppingCartSerializer)
 
 
 class ArtObjectViewSet(mixins.RetrieveModelMixin,
@@ -28,3 +32,37 @@ class ArtObjectViewSet(mixins.RetrieveModelMixin,
         if self.action == 'list':
             return ArtObjectListSerializer
         return ArtObjectRetrieveSerializer
+
+    @action(
+        methods=['post', 'delete'],
+        detail=True,
+        permission_classes=[permissions.IsAuthenticated]
+    )
+    def shopping_cart(self, request, pk=None):
+        """"Обработчик для добавления и удаления объекта в корзину
+        залогиненного пользователя."""
+        artobject = self.get_object()
+        user = self.request.user
+        print(artobject)
+        print(user)
+        serializer = ShoppingCartSerializer(
+            data={'user': user, 'artobject': artobject},
+            context={'request': request}
+        )
+        print(serializer.is_valid())
+        if request.method == 'POST':
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        obj_cart = ShoppingCart.objects.filter(
+            user=user,
+            artobject=artobject
+        )
+        if obj_cart.exists():
+            obj_cart.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {'errors': 'This recipe is not in shopping cart!'},
+            status=status.HTTP_400_BAD_REQUEST
+        )

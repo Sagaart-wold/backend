@@ -5,9 +5,7 @@ from artobjects.models import ArtObject
 
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
-    list_display = ['user', 'status']
-    # inlines = (ArtObjectInline,)
-    raw_id_fields = ['user',]
-    filter_horizontal=('artobjects',)
+    list_display = ['user','artobject', 'amount']
+    raw_id_fields = ['user','artobject',]
 
 

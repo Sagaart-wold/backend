@@ -5,13 +5,29 @@
 
 ### Модель данных:
 
-...
+![Модель данных](doc/model-diagram.svg)
 
 ### Схема БД:
 
-...
+![db_scheme](doc/db-Sagaart.png)
 
-## Возможности проекта:
+
+**IP тестового сервера**: 158.160.171.226
+
+**Redoc**: http://158.160.171.226/api/v1/redoc/
+
+## Технологии:
+
+[![My Skills](https://skillicons.dev/icons?i=py,docker,postgres,django,nginx,github,postman)](https://skillicons.dev)
+
+## Пользователи
+
+### 1. Суперпользоаватель (вход в админку):
+
+        email: aaa@host2011.com,
+        password: alskdjfhg
+
+## Возможности проета:
 
 ...
 
@@ -285,7 +301,7 @@ develop
 ### 1. Клонировать docker_wrapper
 
 ```
-git clone git@github.com:Sagaart-wold/docker-wrapper.git 
+git clone git@github.com:Sagaart-wold/docker-wrapper.git -b development docker-wrapper 
 ```
 или
 ```
@@ -296,7 +312,7 @@ git clone https://github.com/Sagaart-wold/docker-wrapper.git
 ### 2. В папку 'docker_wrapper' склонировать backend
 
 ```
-git clone git@github.com:Sagaart-wold/backend.git -b develop backend 
+git clone git@github.com:Sagaart-wold/backend.git -b develop backend
 ```
 или
 ```
@@ -336,7 +352,9 @@ docker-compose build --no-cache --pull
 
 ## Авторы:  
 
-Елена
-Виктор
-Леонид
+[Елена](https://github.com/Edelveisx)  
+
+[Виктор](https://github.com/Badmajor)
+
+[Леонид](https://github.com/iceeleoo)
 

@@ -18,7 +18,7 @@ jobs:
           mv .env.example .env
           # клонируем фронт и бек
           git clone https://github.com/Sagaart-wold/backend.git -b develop backend
-          git clone https://github.com/Sagaart-wold/frontend.git -b develop frontend 
+          git clone --branch develop --single-branch https://github.com/Sagaart-wold/frontend.git -b develop frontend 
 
       - name: Run Docker Compose
         working-directory: docker-wrapper

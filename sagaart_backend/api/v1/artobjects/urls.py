@@ -19,7 +19,7 @@ router.register('categories', CategoryViewSet, basename='categories')
 router.register('colors', ColorViewSet, basename='colors')
 router.register('genres', GenreViewSet, basename='genres')
 router.register('materials', MaterialArtObjectViewSet, basename='materials')
-router.register('spheres', StyleViewSet, basename='spheres')
+router.register('style', StyleViewSet, basename='style')
 router.register('cities', CityViewSet, basename='cities')
 router.register('socialmedias', SocialMediaViewSet, basename='socialmedias')
 

@@ -3,6 +3,10 @@ from core.models import City, Image
 
 
 class Article(models.Model):
+    name = models.CharField(
+        verbose_name="Краткое описание",
+        blank=True,
+    )
     briefe = models.TextField(
         verbose_name="Краткое описание",
         help_text="Введите краткое описание статьи",

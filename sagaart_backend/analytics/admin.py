@@ -3,7 +3,7 @@ from .models import Subscription, UserSubscription
 
 
 @admin.register(Subscription)
-class CategoryAdmin(admin.ModelAdmin):
+class SubscriptionAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'info', 'period', 'is_actual']
     search_fields = ['name']
 

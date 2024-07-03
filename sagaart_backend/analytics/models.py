@@ -64,7 +64,7 @@ class UserSubscription(models.Model):
     )
     ended_at = models.DateField(
     #  Вычислить дату окончания, в зависимости от начала подписки и периода
-        verbose_name='Дата начала подписки',
+        verbose_name='Дата окончания подписки',
     )
 
     class Meta:

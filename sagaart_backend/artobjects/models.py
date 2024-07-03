@@ -454,7 +454,8 @@ class ArtObject(ABSModelWithArtistField):
         verbose_name='Количество объектов в продаже',
     )
     favourited_by = models.ManyToManyField(
-        User,
+        to=User,
+        blank=True,
         verbose_name='Добавили в избранное',
         related_name="favorite_artobjects",
     )
@@ -488,12 +489,12 @@ class ArtObject(ABSModelWithArtistField):
         self.orientation = 1 if (self.width > self.height) else 2
         bigger = max((self.width, self.height), key=lambda i: int(i))
         if bigger <= 40:
-            tag_size = self.TagSize.choices[0]
+            tag_size = self.TagSize.choices[0][0]
         elif bigger <= 100:
-            tag_size = self.TagSize.choices[1]
+            tag_size = self.TagSize.choices[1][0]
         elif bigger <= 160:
-            tag_size = self.TagSize.choices[2]
-        else: tag_size = self.TagSize.choices[3]
+            tag_size = self.TagSize.choices[2][0]
+        else: tag_size = self.TagSize.choices[3][0]
         self.tag_size = tag_size
         super().save(*args, **kwargs)
 

@@ -488,12 +488,12 @@ class ArtObject(ABSModelWithArtistField):
         self.orientation = 1 if (self.width > self.height) else 2
         bigger = max((self.width, self.height), key=lambda i: int(i))
         if bigger <= 40:
-            tag_size = self.TagSize.choices[1]
+            tag_size = self.TagSize.choices[0]
         elif bigger <= 100:
-            tag_size = self.TagSize.choices[2]
+            tag_size = self.TagSize.choices[1]
         elif bigger <= 160:
-            tag_size = self.TagSize.choices[3]
-        else: tag_size = self.TagSize.choices[4]
+            tag_size = self.TagSize.choices[2]
+        else: tag_size = self.TagSize.choices[3]
         self.tag_size = tag_size
         super().save(*args, **kwargs)
 

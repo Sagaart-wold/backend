@@ -45,7 +45,7 @@ class ShoppingCart(models.Model):
     status = models.PositiveSmallIntegerField(
         verbose_name="Статус объекта",
         choices=ShoppingCartStatus.choices,
-        default=ShoppingCartStatus.choices[1],
+        default=ShoppingCartStatus.choices[0],
     )
     is_payment = models.BooleanField(
         verbose_name='Оплата прошла',

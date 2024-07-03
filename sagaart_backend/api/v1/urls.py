@@ -7,6 +7,7 @@ from rest_framework import permissions
 urlpatterns = [
     path('', include('api.v1.artobjects.urls')),
     path('users/', include('api.v1.users.urls')),
+    path('articles/', include('api.v1.article.urls')),
 ]
 
 

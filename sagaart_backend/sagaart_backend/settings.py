@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'artobjects.apps.ArtobjectsConfig',
     'api.apps.ApiConfig',
     'analytics.apps.AnalyticsConfig',
+    'article.apps.ArticleConfig',
 ]
 
 MIDDLEWARE = [
